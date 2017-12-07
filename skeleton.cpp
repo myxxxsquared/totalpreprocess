@@ -35,7 +35,7 @@ class Point2ds
 
     int find_point(Point2d p)
     {
-        for(int i = 0; i < this->centers.size(); ++i)        
+        for(int i = 0; i < this->centers.size(); ++i)
             if(Point2d::distance(this->centers[i], p) < this->min_dist)
                 return i;
         return -1;
