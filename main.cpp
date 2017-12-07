@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     //image = Scalar(0, 0, 0);
     image = cv::imread("img.jpg");
 
-    vector<vector<Point2d>> polygons = loadfile(ifs);
+    vector<vector<cv::Point2d>> polygons = loadfile(ifs);
     for(auto& polygon : polygons)
     {
         for(int i = 0; i < polygon.size(); ++i)
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
                     cv::Point(MAKE_X(ptj.x), MAKE_X(ptj.y)),
                     Scalar(255, 255, 0));
         }
-        vector<vector<Point2d>> lines = process_to_skeleton(polygon);
+        vector<vector<cv::Point2d>> lines = process_to_skeleton(polygon);
         for(auto& line: lines)
         {
             for(int i = 1; i < line.size(); ++i)

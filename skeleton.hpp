@@ -5,6 +5,7 @@
 #include "data.hpp"
 #include <vector>
 
-std::vector<std::vector<Point2d>> process_to_skeleton(std::vector<Point2d> polygon);
+std::vector<std::vector<cv::Point2d>>
+process_to_skeleton(std::vector<cv::Point2d> polygon);
 
 #endif

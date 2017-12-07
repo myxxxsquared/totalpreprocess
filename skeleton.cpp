@@ -15,6 +15,7 @@ using std::vector;
 using std::set;
 using std::pair;
 using std::make_pair;
+using cv::Point2d;
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef K::Point_2 Point;
@@ -36,7 +37,7 @@ class Point2ds
     int find_point(Point2d p)
     {
         for(int i = 0; i < this->centers.size(); ++i)
-            if(Point2d::distance(this->centers[i], p) < this->min_dist)
+            if(cv::norm(this->centers[i] - p) < this->min_dist)
                 return i;
         return -1;
     }
@@ -84,9 +85,9 @@ class Point2ds
     {
         double dmin = INFINITY;
         int index = -1;
-        for(int i = 0; i < this->centers.size(); ++i)        
+        for(int i = 0; i < this->centers.size(); ++i)
         {
-            double d = Point2d::distance(this->centers[i], p);
+            double d = cv::norm(this->centers[i] - p);
             if(d<dmin)
             {
                 dmin = d;
@@ -143,6 +144,12 @@ static double edge_length(Point p1, Point p2)
     double y = p1.y() - p2.y();
 
     return sqrt(x*x + y*y);
+}
+
+static double cos_value(Point2d p1, Point2d p2, Point2d p3)
+{
+    Point2d dp1 = p2-p1, dp2 = p3-p2;
+    return (dp1.x*dp2.x + dp1.y*dp2.y) / cv::norm(dp1) / cv::norm(dp2);
 }
 
 class Processor
@@ -202,7 +209,7 @@ class Processor
             if(!graph.edges[j][k])
                 continue;
             Point2d p3 = ps.at(k);
-            double cosval = Point2d::cosval(p1, p2, p3);
+            double cosval = cos_value(p1, p2, p3);
             if(cosval > MIN_COS_VALUE
                 && cosval > maxcos)
             {
@@ -261,25 +268,6 @@ class Processor
         }
     }
 };
-
-static void process_ss(Ss const & ss)
-{
-    Processor p;
-    p.init(ss);
-    p.process();
-    printf("n\n");
-    for(auto& line : p.lines)
-    {
-        printf("l ");
-        for(auto& pt : line)
-        {
-            Point2d loc = p.ps.at(pt);
-            printf("(%lf, %lf)", loc.x, loc.y);
-        }
-        printf("\n");
-    }
-    printf("e\n");
-}
 
 vector<vector<Point2d>> process_to_skeleton(vector<Point2d> polygon)
 {
