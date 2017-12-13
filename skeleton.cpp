@@ -1,13 +1,5 @@
-#include <boost/shared_ptr.hpp>
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Polygon_2.h>
-#include <CGAL/create_straight_skeleton_2.h>
 
-#include <vector>
-#include <set>
-#include <utility>
-#include <cmath>
-
+#include "totalpreprocess.hpp"
 #include "data.hpp"
 #include "skeleton.hpp"
 
@@ -16,12 +8,6 @@ using std::set;
 using std::pair;
 using std::make_pair;
 using cv::Point2d;
-
-typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
-typedef K::Point_2 Point;
-typedef CGAL::Polygon_2<K> Polygon_2;
-typedef CGAL::Straight_skeleton_2<K> Ss;
-typedef boost::shared_ptr<Ss> SsPtr;
 
 typedef typename Ss::Vertex_const_handle Vertex_const_handle;
 typedef typename Ss::Halfedge_const_handle Halfedge_const_handle;
@@ -152,7 +138,7 @@ static double cos_value(Point2d p1, Point2d p2, Point2d p3)
     return (dp1.x*dp2.x + dp1.y*dp2.y) / cv::norm(dp1) / cv::norm(dp2);
 }
 
-class Processor
+class SkeletonProcessor
 {
   public:
     Point2ds ps;
@@ -276,7 +262,7 @@ vector<vector<Point2d>> process_to_skeleton(vector<Point2d> polygon)
         poly.push_back(Point(pt.x, pt.y));
 
     SsPtr ss = CGAL::create_interior_straight_skeleton_2(poly.vertices_begin(), poly.vertices_end());
-    Processor p;
+    SkeletonProcessor p;
     p.init(*ss);
     p.process();
 

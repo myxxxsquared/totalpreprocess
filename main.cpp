@@ -1,10 +1,8 @@
 
+#include "totalpreprocess.hpp"
+
 #include "data.hpp"
 #include "skeleton.hpp"
-
-#include <opencv2/opencv.hpp>
-
-#include <fstream>
 
 using std::vector;
 using std::ifstream;

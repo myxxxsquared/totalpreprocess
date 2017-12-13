@@ -1,9 +1,5 @@
 
-#include <cmath>
-#include <vector>
-#include <istream>
-#include <string>
-
+#include "totalpreprocess.hpp"
 #include "data.hpp"
 
 using std::vector;
