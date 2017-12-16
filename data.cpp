@@ -7,12 +7,12 @@ using std::string;
 using cv::Point2d;
 using std::istream;
 
-vector<vector<Point2d>> loadfile(istream& ifs)
+vector<Polygon> loadfile(istream& ifs)
 {
     string line;
 
-    vector<vector<Point2d>> result;
-    vector<Point2d> current;
+    vector<Polygon> result;
+    Polygon current;
 
     while(ifs.good())
     {
@@ -30,7 +30,7 @@ vector<vector<Point2d>> loadfile(istream& ifs)
         {
             int x, y;
             sscanf(line.c_str(), "p %d, %d", &x, &y);
-            current.push_back(Point2d(x, y));
+            current.push_back(Point(x, y));
         }
     }
 

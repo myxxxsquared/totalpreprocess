@@ -22,7 +22,7 @@ class Point2ds
 
     int find_point(Point2d p)
     {
-        for(int i = 0; i < this->centers.size(); ++i)
+        for(int i = 0; i < (int)this->centers.size(); ++i)
             if(cv::norm(this->centers[i] - p) < this->min_dist)
                 return i;
         return -1;
@@ -71,7 +71,7 @@ class Point2ds
     {
         double dmin = INFINITY;
         int index = -1;
-        for(int i = 0; i < this->centers.size(); ++i)
+        for(int i = 0; i < (int)this->centers.size(); ++i)
         {
             double d = cv::norm(this->centers[i] - p);
             if(d<dmin)
@@ -117,7 +117,7 @@ class IdGraph
     vector<int> next_edges(int i)
     {
         vector<int> result;
-        for(int j = 0; j < edges.size(); ++j)
+        for(int j = 0; j < (int)edges.size(); ++j)
             if(edges[i][j])
                 result.push_back(j);
         return result;
@@ -190,7 +190,7 @@ class SkeletonProcessor
         int index = -1;
         double maxcos = -1;
 
-        for(int k = 0; k < graph.edges.size(); ++k)
+        for(int k = 0; k < (int)graph.edges.size(); ++k)
         {
             if(!graph.edges[j][k])
                 continue;
@@ -245,9 +245,9 @@ class SkeletonProcessor
                 p1 = findnextedges(i, j);
                 p2 = findnextedges(j, i);
                 p.resize(p1.size() + p2.size());
-                for(int i = 0; i < p1.size(); ++i)
+                for(int i = 0; i < (int)p1.size(); ++i)
                     p[p1.size()-i-1] = p1[i];
-                for(int i = 0; i < p2.size(); ++i)
+                for(int i = 0; i < (int)p2.size(); ++i)
                     p[i+p1.size()] = p2[i];
                 lines.push_back(p);
             }
@@ -255,7 +255,7 @@ class SkeletonProcessor
     }
 };
 
-vector<vector<Segment_2>> process_to_skeleton(const Polygon_2& poly)
+vector<vector<Segment>> process_to_skeleton(const Polygon& poly)
 {
     SsPtr ss = CGAL::create_interior_straight_skeleton_2(poly.vertices_begin(), poly.vertices_end());
     SkeletonProcessor p;
@@ -264,14 +264,14 @@ vector<vector<Segment_2>> process_to_skeleton(const Polygon_2& poly)
 
     auto& lines = p.lines;
 
-    vector<vector<Segment_2>> result;
+    vector<vector<Segment>> result;
     for(auto& l : lines)
     {
         result.emplace_back();
         vector<Point> points;
         for(int pt : l)
             points.emplace_back(p.ps.at(pt).x, p.ps.at(pt).y);
-        for(int i = 0; i < points.size() - 1; ++i)
+        for(int i = 0; i < (int)points.size() - 1; ++i)
             result.back().emplace_back(points[i], points[i+1]);
     }
     return result;

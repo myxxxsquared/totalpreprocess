@@ -2,10 +2,8 @@
 #ifndef DATA_HEADER
 #define DATA_HEADER
 
-#include <opencv2/opencv.hpp>
-#include <vector>
-#include <istream>
+#include "totalpreprocess.hpp"
 
-std::vector<std::vector<cv::Point2d>> loadfile(std::istream& ifs);
+std::vector<Polygon> loadfile(std::istream& ifs);
 
 #endif

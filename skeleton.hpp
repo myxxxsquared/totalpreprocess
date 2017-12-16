@@ -2,10 +2,10 @@
 #ifndef SKELETON_HEADER
 #define SKELETON_HEADER
 
+#include "totalpreprocess.hpp"
 #include "data.hpp"
-#include <vector>
 
-std::vector<std::vector<Segment_2>>
-process_to_skeleton(const Polygon_2& poly);
+std::vector<std::vector<Segment>>
+process_to_skeleton(const Polygon& poly);
 
 #endif
