@@ -4,6 +4,7 @@
 #include "data.hpp"
 #include "angle.hpp"
 #include "polygonpreprocess.hpp"
+#include "matrix.h"
 
 /*
  0 vaild
@@ -27,10 +28,11 @@ struct VecTarget
     double crosslayer[4];
 };
 
-typedef cv::Mat_<VecTarget> MatTarget;
-typedef cv::Mat_<int> MatIndexs;
+typedef xmat::Matrix<VecTarget> MatTarget;
+typedef xmat::Matrix<int> MatIndexs;
 
 constexpr int NUMSCALES = 6;
+extern const int SCALES[];
 
 class Preprocess
 {

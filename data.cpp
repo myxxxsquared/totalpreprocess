@@ -5,13 +5,13 @@
 using cv::Point2d;
 using std::istream;
 using std::string;
-using std::vector;
+using std::list;
 
-vector<Polygon> loadfile(istream &ifs)
+list<Polygon> loadfile(istream &ifs)
 {
     string line;
 
-    vector<Polygon> result;
+    list<Polygon> result;
     Polygon current;
 
     while (ifs.good())

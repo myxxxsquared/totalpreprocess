@@ -4,10 +4,10 @@
 
 const int SCALES[] = {8, 16, 32, 64, 128, 256};
 
-#define locsame(nj, nk) (nj >= 0 && nj < sheight && nk >= 0 && nk < swidth && target.at<VecTarget>(nj, nk).vaild > 0.5 && index.at<int>(j, k) == index.at<int>(nj, nk))
-#define crosssame(nj, nk) (target2.at<VecTarget>(nj, nk).vaild > 0.5 && index.at<int>(j, k) == index2.at<int>(nj, nk))
-#define dolocsame(m, nj, nk) target.at<VecTarget>(j, k).inlayer[m] = locsame(nj, nk) ? 1.0 : 0.0
-#define docrosssame(m, nj, nk) target.at<VecTarget>(j, k).crosslayer[m] = crosssame(nj, nk) ? 1.0 : 0.0
+#define locsame(nj, nk) (nj >= 0 && nj < sheight && nk >= 0 && nk < swidth && target.at(nj, nk).vaild > 0.5 && index.at(j, k) == index.at(nj, nk))
+#define crosssame(nj, nk) (target2.at(nj, nk).vaild > 0.5 && index.at(j, k) == index2.at(nj, nk))
+#define dolocsame(m, nj, nk) target.at(j, k).inlayer[m] = locsame(nj, nk) ? 1.0 : 0.0
+#define docrosssame(m, nj, nk) target.at(j, k).crosslayer[m] = crosssame(nj, nk) ? 1.0 : 0.0
 
 void Preprocess::process(int height, int width, const char *filename)
 {
@@ -18,8 +18,8 @@ void Preprocess::process(int height, int width, const char *filename)
     this->width = width;
 
     polygons.clear();
-    std::ifstream ifs{filename};
-    std::vector<Polygon> ps = loadfile(ifs);
+    std::ifstream ifs{filename, std::ifstream::in};
+    std::list<Polygon> ps = loadfile(ifs);
     polygons.reserve(ps.size());
     for (const Polygon &p : ps)
     {
@@ -47,8 +47,8 @@ void Preprocess::process(int height, int width, const char *filename)
             for (int k = 0; k < swidth; ++k)
             {
                 double x = k * scale + zeropoint;
-                auto &target = targets[i].at<VecTarget>(j, k);
-                auto &index = indexs[i].at<int>(j, k);
+                auto &target = targets[i].at(j, k);
+                auto &index = indexs[i].at(j, k);
 
                 for (int l = 0; l < (int)polygons.size(); ++l)
                 {
@@ -65,6 +65,7 @@ void Preprocess::process(int height, int width, const char *filename)
                         target.angle = temp.angle;
                         target.curvature = temp.curvature;
                         index = l;
+                        break;
                     }
                     else
                     {
@@ -80,7 +81,7 @@ void Preprocess::process(int height, int width, const char *filename)
         {
             for (int k = 0; k < swidth; ++k)
             {
-                if (target.at<VecTarget>(j, k).vaild < 0.5)
+                if (target.at(j, k).vaild < 0.5)
                     continue;
                 dolocsame(0, j - 1, k - 1);
                 dolocsame(1, j, k - 1);

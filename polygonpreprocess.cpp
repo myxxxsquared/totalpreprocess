@@ -23,7 +23,7 @@ void process_polygon::init_segments()
             auto vector = last.segment.to_vector();
             last.angle = atan2(vector.y(), vector.x());
         }
-        for (int i = 0; i < (int)simples.size() - 1; ++i)
+        for (int i = 0; i < (int)simples.size(); ++i)
         {
             Angle angle_last = i == 0 ? back[i].angle : back[i - 1].angle;
             Angle angle_cur = back[i].angle;
@@ -38,18 +38,18 @@ void process_polygon::init_segments()
     }
 }
 
-bool process_polygon::check_inside(Point point)
+bool process_polygon::check_inside(const Point& point) const
 {
     return CGAL::bounded_side_2(
                bounding.vertices_begin(),
                bounding.vertices_end(),
-               point) == CGAL::ON_UNBOUNDED_SIDE;
+               point) == CGAL::ON_BOUNDED_SIDE;
 }
 
-process_segment *process_polygon::find_nearest(Point point)
+const process_segment *process_polygon::find_nearest(const Point& point) const
 {
     double mindist = INFINITY;
-    process_segment *minseg = nullptr;
+    const process_segment *minseg = nullptr;
 
     for (auto &ss : this->segments)
     {
@@ -67,7 +67,7 @@ process_segment *process_polygon::find_nearest(Point point)
     return minseg;
 }
 
-bool process_polygon::nearest_point(const Ray &r, double &result)
+bool process_polygon::nearest_point(const Ray &r, double &result) const
 {
     double minval = INFINITY;
     bool found = false;
@@ -75,13 +75,16 @@ bool process_polygon::nearest_point(const Ray &r, double &result)
     {
         Segment s = *it;
         auto inter = CGAL::intersection(r, s);
-        if (auto *pt = boost::get<Segment>(&*inter))
+        if( inter )
         {
-            double newdist = CGAL::squared_distance(r.source(), *pt);
-            if (newdist < minval)
+            if (auto *pt = boost::get<Point>(&*inter))
             {
-                minval = newdist;
-                found = true;
+                double newdist = CGAL::squared_distance(r.source(), *pt);
+                if (newdist < minval)
+                {
+                    minval = newdist;
+                    found = true;
+                }
             }
         }
     }
@@ -90,7 +93,7 @@ bool process_polygon::nearest_point(const Ray &r, double &result)
     return found;
 }
 
-Angle process_polygon::get_angle(Point point, process_segment *minseg)
+Angle process_polygon::get_angle(const Point& point, const process_segment *minseg) const
 {
     double dist1 = sqrt(CGAL::squared_distance(point, minseg->segment.source()));
     double dist2 = sqrt(CGAL::squared_distance(point, minseg->segment.target()));
@@ -104,7 +107,7 @@ bool process_polygon::process(double x, double y, double scale, process_point &r
     if (!check_inside(point))
         return false;
 
-    process_segment *minseg = find_nearest(point);
+    const process_segment *minseg = find_nearest(point);
     if (!minseg)
         return false;
 
@@ -116,35 +119,49 @@ bool process_polygon::process(double x, double y, double scale, process_point &r
 
     double xl, xr, yt, yb;
 
-    if (!nearest_point(angle.vert().ray(point), yt))
+    if (!nearest_point(realangle.vert().ray(point), yt))
         return false;
-    if (!nearest_point(angle.vert().opposite().ray(point), yb))
+    if (!nearest_point(realangle.vert().opposite().ray(point), yb))
         return false;
     double height = yt + yb;
 
     if (scale / height > 1.5 || height / scale > 1.5)
         return false;
 
-    if (!nearest_point(angle.opposite().ray(point), xl))
+    if (!nearest_point(realangle.opposite().ray(point), xl))
         return false;
-    if (!nearest_point(angle.ray(point), xr))
+    if (!nearest_point(realangle.ray(point), xr))
         return false;
-    if (xl > scale / 2)
-        xl = scale / 2;
-    if (xr > scale / 2)
-        xr = scale / 2;
+    if (xl > scale)
+        xl = scale;
+    if (xr > scale)
+        xr = scale;
 
     double width = xl + xr;
-    Point newcenter = point + (xr - xl) * e1 + (yt - yb) * e2;
+    Point newcenter = point + (xr - xl)/2 * e1 + (yt - yb)/2 * e2;
     double deltax = newcenter.x() - point.x();
     double deltay = newcenter.y() - point.y();
 
-    result.height = height;
-    result.width = width;
+    if(realangle.angle > M_PI / 2)
+    {
+        realangle.angle = realangle.angle - M_PI / 2;
+        std::swap(height, width);
+    }
+
+    if(realangle.angle > M_PI / 4)
+    {
+        realangle.angle = realangle.angle - M_PI / 2;
+        std::swap(height, width);
+    }
+
+    result.height = height/2;
+    result.width = width/2;
     result.deltax = deltax;
     result.deltay = deltay;
     result.angle = realangle.angle;
     result.curvature = minseg->curvature;
+
+    
 
     return true;
 }

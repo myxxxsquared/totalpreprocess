@@ -125,7 +125,8 @@ class IdGraph
     }
 };
 
-static double edge_length(Point p1, Point p2)
+template<typename Pt>
+static double edge_length(Pt p1, Pt p2)
 {
     double x = p1.x() - p2.x();
     double y = p1.y() - p2.y();
@@ -257,7 +258,12 @@ class SkeletonProcessor
 
 vector<vector<Segment>> process_to_skeleton(const Polygon &poly)
 {
-    SsPtr ss = CGAL::create_interior_straight_skeleton_2(poly.vertices_begin(), poly.vertices_end());
+    std::vector<PointSs> pts;
+    pts.reserve(poly.size());
+    for(auto it = poly.vertices_begin(); it != poly.vertices_end(); ++it)
+        pts.emplace_back(it->x(), it->y());
+
+    SsPtr ss = CGAL::create_interior_straight_skeleton_2(pts.begin(), pts.end());
     SkeletonProcessor p;
     p.init(*ss);
     p.process();

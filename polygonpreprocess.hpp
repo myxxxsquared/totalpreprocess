@@ -30,10 +30,10 @@ struct process_polygon
     bool process(double x, double y, double scale, process_point &result);
 
   private:
-    bool check_inside(Point point);
-    process_segment *find_nearest(Point point);
-    bool nearest_point(const Ray &r, double &result);
-    Angle get_angle(Point point, process_segment *minseg);
+    bool check_inside(const Point& point) const;
+    const process_segment *find_nearest(const Point& point) const;
+    bool nearest_point(const Ray &r, double &result) const;
+    Angle get_angle(const Point& point, const process_segment *minseg) const;
 };
 
 #endif
