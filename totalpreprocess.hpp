@@ -31,6 +31,3 @@ typedef CGAL::Straight_skeleton_2<CGALK> Ss;
 typedef boost::shared_ptr<Ss> SsPtr;
 typedef CGAL::Ray_2<CGALK> Ray;
 typedef CGAL::Polygon_with_holes_2<CGALK> Polygon_with_holes;
-
-typedef cv::Vec<float, 32> VecTarget;
-typedef cv::Mat_<VecTarget> MatTarget;
