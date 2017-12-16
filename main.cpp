@@ -21,9 +21,9 @@ using cv::Vec2d;
 int main(int argc, char* argv[])
 {
     Preprocess process;
-    process.process(512, 512, "/mnt/z/source/thin/build/poly.output");
+    process.process(512, 512, "../testdata/poly.output");
     Mat image, tmpimage;
-    tmpimage = cv::imread("img.jpg");
+    tmpimage = cv::imread("../testdata/img.jpg");
     image.create(512, 512, tmpimage.type());
     cv::Rect rect{0, 0, tmpimage.cols, tmpimage.rows};
     tmpimage.copyTo(image(rect));
@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 
     for(auto& polygon : process.polygons)
     {
-        for(int i = 0; i < polygon.bounding.size(); ++i)
+        for(int i = 0; i < (int)polygon.bounding.size(); ++i)
         {
             auto& pti = polygon.bounding[i];
             auto& ptj = polygon.bounding[(i+1)%polygon.bounding.size()];
@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
         }
         for(auto& line: polygon.segments)
         {
-            for(int i = 0; i < line.size(); ++i)
+            for(int i = 0; i < (int)line.size(); ++i)
             {
                 auto& pti = line[i].segment.source();
                 auto& ptj = line[i].segment.target();
@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    cv::imwrite("output.png", image);
+    cv::imwrite("../testdata/output.png", image);
     // imshow("text", image);
     // waitKey();
     // //image.create(700, 1000, CV_8UC3);

@@ -6,17 +6,11 @@ Angle::Angle() : angle(0) {}
 
 Angle::Angle(double a)
 {
-    double aorigin = a;
     if (a < 0)
     {
         a -= ((int)(a / (2 * M_PI) - 2)) * (2 * M_PI);
     }
     angle = fmod(a, 2 * M_PI);
-
-    if(angle < 0 || angle > 2*M_PI)
-    {
-        throw "assert error";
-    }
 };
 
 Angle Angle::bisector(const Angle &a1, const Angle &a2)
@@ -75,10 +69,4 @@ Vector Angle::direct() const
 Angle Angle::to90() const
 {
     return Angle(fmod(angle, (M_PI)));
-    // double d = fmod(angle, (M_PI / 2));
-    // return Angle(d);
-    // if (d > M_PI / 4)
-    //     return Angle(d - M_PI / 2);
-    // else
-    //     return Angle(d);
 }
