@@ -13,7 +13,7 @@ Angle::Angle(double a)
     angle = fmod(a, 2 * M_PI);
 };
 
-Angle Angle::bisector(const Angle& a1, const Angle& a2)
+Angle Angle::bisector(const Angle &a1, const Angle &a2)
 {
     if (abs(a1.angle - a2.angle) < M_PI)
     {
@@ -25,7 +25,7 @@ Angle Angle::bisector(const Angle& a1, const Angle& a2)
     }
 }
 
-Angle Angle::average(const Angle& a1, double w1, const Angle& a2, double w2)
+Angle Angle::average(const Angle &a1, double w1, const Angle &a2, double w2)
 {
     if (abs(a1.angle - a2.angle) < M_PI)
     {
@@ -37,7 +37,7 @@ Angle Angle::average(const Angle& a1, double w1, const Angle& a2, double w2)
     }
 }
 
-Angle Angle::distance(const Angle& a1, const Angle& a2)
+Angle Angle::distance(const Angle &a1, const Angle &a2)
 {
     double d = abs(a1.angle - a2.angle);
     if (d > M_PI)
@@ -56,7 +56,7 @@ Angle Angle::opposite() const
     return Angle(angle + M_PI);
 }
 
-Ray Angle::ray(const Point& p) const
+Ray Angle::ray(const Point &p) const
 {
     return Ray(p, Point(p.x() + cos(angle), p.y() + sin(angle)));
 }

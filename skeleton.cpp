@@ -3,11 +3,11 @@
 #include "data.hpp"
 #include "skeleton.hpp"
 
-using std::vector;
-using std::set;
-using std::pair;
-using std::make_pair;
 using cv::Point2d;
+using std::make_pair;
+using std::pair;
+using std::set;
+using std::vector;
 
 typedef typename Ss::Vertex_const_handle Vertex_const_handle;
 typedef typename Ss::Halfedge_const_handle Halfedge_const_handle;
@@ -22,20 +22,20 @@ class Point2ds
 
     int find_point(Point2d p)
     {
-        for(int i = 0; i < (int)this->centers.size(); ++i)
-            if(cv::norm(this->centers[i] - p) < this->min_dist)
+        for (int i = 0; i < (int)this->centers.size(); ++i)
+            if (cv::norm(this->centers[i] - p) < this->min_dist)
                 return i;
         return -1;
     }
     void update_point_center(int i)
     {
-        auto& ps = this->points[i];
-        auto& p = this->centers[i];
+        auto &ps = this->points[i];
+        auto &p = this->centers[i];
 
         p.x = 0;
         p.y = 0;
 
-        for(auto& ep : ps)
+        for (auto &ep : ps)
         {
             p.x += ep.x;
             p.y += ep.y;
@@ -44,6 +44,7 @@ class Point2ds
         p.x /= ps.size();
         p.y /= ps.size();
     }
+
   public:
     double min_dist;
     void init(double min_d)
@@ -55,7 +56,7 @@ class Point2ds
     void add_point(Point2d p)
     {
         int index = this->find_point(p);
-        if(index != -1)
+        if (index != -1)
         {
             this->points[index].push_back(p);
             this->update_point_center(index);
@@ -71,10 +72,10 @@ class Point2ds
     {
         double dmin = INFINITY;
         int index = -1;
-        for(int i = 0; i < (int)this->centers.size(); ++i)
+        for (int i = 0; i < (int)this->centers.size(); ++i)
         {
             double d = cv::norm(this->centers[i] - p);
-            if(d<dmin)
+            if (d < dmin)
             {
                 dmin = d;
                 index = i;
@@ -101,13 +102,13 @@ class IdGraph
     {
         edges.clear();
         this->edges.resize(d);
-        for(auto& e : this->edges)
+        for (auto &e : this->edges)
             e.resize(d);
     }
 
     void add_edge(int i, int j)
     {
-        if(i != j)
+        if (i != j)
         {
             edges[i][j] = 1;
             edges[j][i] = 1;
@@ -117,8 +118,8 @@ class IdGraph
     vector<int> next_edges(int i)
     {
         vector<int> result;
-        for(int j = 0; j < (int)edges.size(); ++j)
-            if(edges[i][j])
+        for (int j = 0; j < (int)edges.size(); ++j)
+            if (edges[i][j])
                 result.push_back(j);
         return result;
     }
@@ -129,13 +130,13 @@ static double edge_length(Point p1, Point p2)
     double x = p1.x() - p2.x();
     double y = p1.y() - p2.y();
 
-    return sqrt(x*x + y*y);
+    return sqrt(x * x + y * y);
 }
 
 static double cos_value(Point2d p1, Point2d p2, Point2d p3)
 {
-    Point2d dp1 = p2-p1, dp2 = p3-p2;
-    return (dp1.x*dp2.x + dp1.y*dp2.y) / cv::norm(dp1) / cv::norm(dp2);
+    Point2d dp1 = p2 - p1, dp2 = p3 - p2;
+    return (dp1.x * dp2.x + dp1.y * dp2.y) / cv::norm(dp1) / cv::norm(dp2);
 }
 
 class SkeletonProcessor
@@ -145,24 +146,24 @@ class SkeletonProcessor
     IdGraph graph;
     vector<vector<int>> lines;
 
-    void init(const Ss& ss)
+    void init(const Ss &ss)
     {
         double max_length = 0;
         for (Halfedge_const_iterator i = ss.halfedges_begin(); i != ss.halfedges_end(); ++i)
         {
-            if(!i->is_inner_bisector())
+            if (!i->is_inner_bisector())
                 continue;
             auto p1 = i->opposite()->vertex()->point();
             auto p2 = i->vertex()->point();
             double length = edge_length(p1, p2);
-            if(length > max_length)
+            if (length > max_length)
                 max_length = length;
         }
 
         ps.init(max_length / 10.0);
         for (Halfedge_const_iterator i = ss.halfedges_begin(); i != ss.halfedges_end(); ++i)
         {
-            if(!i->is_inner_bisector())
+            if (!i->is_inner_bisector())
                 continue;
             auto p1 = i->opposite()->vertex()->point();
             auto p2 = i->vertex()->point();
@@ -173,7 +174,7 @@ class SkeletonProcessor
         graph.init(ps.size());
         for (Halfedge_const_iterator i = ss.halfedges_begin(); i != ss.halfedges_end(); ++i)
         {
-            if(!i->is_inner_bisector())
+            if (!i->is_inner_bisector())
                 continue;
             auto p1 = i->opposite()->vertex()->point();
             auto p2 = i->vertex()->point();
@@ -190,14 +191,13 @@ class SkeletonProcessor
         int index = -1;
         double maxcos = -1;
 
-        for(int k = 0; k < (int)graph.edges.size(); ++k)
+        for (int k = 0; k < (int)graph.edges.size(); ++k)
         {
-            if(!graph.edges[j][k])
+            if (!graph.edges[j][k])
                 continue;
             Point2d p3 = ps.at(k);
             double cosval = cos_value(p1, p2, p3);
-            if(cosval > MIN_COS_VALUE
-                && cosval > maxcos)
+            if (cosval > MIN_COS_VALUE && cosval > maxcos)
             {
                 index = k;
                 maxcos = cosval;
@@ -212,32 +212,32 @@ class SkeletonProcessor
         vector<int> result;
         result.push_back(j);
 
-        while(true)
+        while (true)
         {
             int k = findnextedge(i, j);
 
-            if(k == -1)
+            if (k == -1)
                 break;
 
             graph.edges[j][k] = 0;
             graph.edges[k][j] = 0;
 
             result.push_back(k);
-            i=j;
-            j=k;
+            i = j;
+            j = k;
         }
         return result;
     }
 
     void process()
     {
-        for(int i = 0; i < ps.size(); ++i)
+        for (int i = 0; i < ps.size(); ++i)
         {
-            for(int j = 0; j < ps.size(); ++j)
+            for (int j = 0; j < ps.size(); ++j)
             {
-                if(!graph.edges[i][j])
+                if (!graph.edges[i][j])
                     continue;
-                
+
                 graph.edges[i][j] = 0;
                 graph.edges[j][i] = 0;
 
@@ -245,34 +245,34 @@ class SkeletonProcessor
                 p1 = findnextedges(i, j);
                 p2 = findnextedges(j, i);
                 p.resize(p1.size() + p2.size());
-                for(int i = 0; i < (int)p1.size(); ++i)
-                    p[p1.size()-i-1] = p1[i];
-                for(int i = 0; i < (int)p2.size(); ++i)
-                    p[i+p1.size()] = p2[i];
+                for (int i = 0; i < (int)p1.size(); ++i)
+                    p[p1.size() - i - 1] = p1[i];
+                for (int i = 0; i < (int)p2.size(); ++i)
+                    p[i + p1.size()] = p2[i];
                 lines.push_back(p);
             }
         }
     }
 };
 
-vector<vector<Segment>> process_to_skeleton(const Polygon& poly)
+vector<vector<Segment>> process_to_skeleton(const Polygon &poly)
 {
     SsPtr ss = CGAL::create_interior_straight_skeleton_2(poly.vertices_begin(), poly.vertices_end());
     SkeletonProcessor p;
     p.init(*ss);
     p.process();
 
-    auto& lines = p.lines;
+    auto &lines = p.lines;
 
     vector<vector<Segment>> result;
-    for(auto& l : lines)
+    for (auto &l : lines)
     {
         result.emplace_back();
         vector<Point> points;
-        for(int pt : l)
+        for (int pt : l)
             points.emplace_back(p.ps.at(pt).x, p.ps.at(pt).y);
-        for(int i = 0; i < (int)points.size() - 1; ++i)
-            result.back().emplace_back(points[i], points[i+1]);
+        for (int i = 0; i < (int)points.size() - 1; ++i)
+            result.back().emplace_back(points[i], points[i + 1]);
     }
     return result;
 }

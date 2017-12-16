@@ -27,13 +27,13 @@ struct process_polygon
     std::vector<std::vector<process_segment>> segments;
 
     void init_segments();
-    bool process(double x, double y, double scale, process_point& result);
-private:
-    bool check_inside(Point point);
-    process_segment* find_nearest(Point point);
-    bool nearest_point(const Ray& r, double& result);
-    Angle get_angle(Point point, process_segment* minseg);
-};
+    bool process(double x, double y, double scale, process_point &result);
 
+  private:
+    bool check_inside(Point point);
+    process_segment *find_nearest(Point point);
+    bool nearest_point(const Ray &r, double &result);
+    Angle get_angle(Point point, process_segment *minseg);
+};
 
 #endif
