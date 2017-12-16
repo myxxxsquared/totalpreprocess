@@ -1,0 +1,7 @@
+
+对于每一个点
+1. 找bouding box https://doc.cgal.org/latest/	
+2. 找旋转角度 https://doc.cgal.org/latest/Kernel_23/classCGAL_1_1Aff__transformation__2.html
+3. 找文字高度 intersect
+4. 执行裁剪，找到 aabb https://doc.cgal.org/latest/Boolean_set_operations_2/group__boolean__intersection.html
+5. 确定中心

@@ -255,12 +255,8 @@ class SkeletonProcessor
     }
 };
 
-vector<vector<Point2d>> process_to_skeleton(vector<Point2d> polygon)
+vector<vector<Segment_2>> process_to_skeleton(const Polygon_2& poly)
 {
-    Polygon_2 poly;
-    for(auto & pt : polygon)
-        poly.push_back(Point(pt.x, pt.y));
-
     SsPtr ss = CGAL::create_interior_straight_skeleton_2(poly.vertices_begin(), poly.vertices_end());
     SkeletonProcessor p;
     p.init(*ss);
@@ -268,12 +264,15 @@ vector<vector<Point2d>> process_to_skeleton(vector<Point2d> polygon)
 
     auto& lines = p.lines;
 
-    vector<vector<Point2d>> result;
+    vector<vector<Segment_2>> result;
     for(auto& l : lines)
     {
         result.emplace_back();
+        vector<Point> points;
         for(int pt : l)
-            result.back().push_back(p.ps.at(pt));
+            points.emplace_back(p.ps.at(pt).x, p.ps.at(pt).y);
+        for(int i = 0; i < points.size() - 1; ++i)
+            result.back().emplace_back(points[i], points[i+1]);
     }
     return result;
 }
