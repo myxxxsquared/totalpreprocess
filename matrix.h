@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cstdio>
 
 #ifndef MYXMAT_DEBUG_LEVEL
-	#ifdef _DEBUG
+	#if defined(_DEBUG) || defined(DEBUG)
 		#define MYXMAT_DEBUG_LEVEL 2
 	#else
 		#define MYXMAT_DEBUG_LEVEL 0

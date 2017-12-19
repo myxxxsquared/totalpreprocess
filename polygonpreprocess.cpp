@@ -154,14 +154,12 @@ bool process_polygon::process(double x, double y, double scale, process_point &r
         std::swap(height, width);
     }
 
-    result.height = height/2;
-    result.width = width/2;
-    result.deltax = deltax;
-    result.deltay = deltay;
+    result.height = height/2/scale;
+    result.width = width/2/scale;
+    result.deltax = deltax/scale;
+    result.deltay = deltay/scale;
     result.angle = realangle.angle;
-    result.curvature = minseg->curvature;
-
-    
+    result.curvature = minseg->curvature*scale;
 
     return true;
 }

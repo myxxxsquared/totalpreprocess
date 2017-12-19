@@ -14,7 +14,8 @@
 - `cd build`
 - `cmake ..`
 - `make`
-- `./totalpreprocess`
+- `cd ../testdata`
+- `./run.sh`
 
 ## 输出格式
 
@@ -30,3 +31,18 @@
     - 6 curvature
     - 7-14 inlayer
     - 15-18 crosslayer
+
+### inlayer channel 顺序
+
+```
+0 7 6
+1 x 5
+2 3 4
+```
+
+### crosslayer channel 顺序
+
+```
+0 2
+1 3
+```
