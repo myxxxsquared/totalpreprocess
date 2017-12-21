@@ -7,6 +7,14 @@ void process_polygon::init_segments()
 {
     this->segments.clear();
 
+    this->shortest = INFINITY;
+    for(auto it = this->bounding.edges_begin(); it != this->bounding.edges_end(); ++it)
+    {
+        double len = sqrt(it->squared_length())/2.0;
+        if(this->shortest > len)
+            this->shortest = len;
+    }
+
     std::vector<std::vector<Segment>> simpless = process_to_skeleton(this->bounding);
     this->segments.reserve(simpless.size());
     for (auto &simples : simpless)
@@ -103,6 +111,9 @@ Angle process_polygon::get_angle(const Point& point, const process_segment *mins
 
 bool process_polygon::process(double x, double y, double scale, process_point &result)
 {
+    if(scale < this->shortest)
+        return false;
+
     Point point{x, y};
     if (!check_inside(point))
         return false;
@@ -125,7 +136,7 @@ bool process_polygon::process(double x, double y, double scale, process_point &r
         return false;
     double height = yt + yb;
 
-    if (scale / height > 1.5 || height / scale > 1.5)
+    if (scale / height > 1.8 || height / scale > 1.8)
         return false;
 
     if (!nearest_point(realangle.opposite().ray(point), xl))

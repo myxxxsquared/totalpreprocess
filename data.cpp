@@ -21,6 +21,8 @@ list<Polygon> loadfile(istream &ifs)
         {
             if (current.size() != 0)
             {
+                if(current.is_clockwise_oriented())
+                    std::reverse(current.vertices_begin(), current.vertices_end());
                 result.push_back(current);
                 current.clear();
             }

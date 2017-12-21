@@ -33,7 +33,10 @@ Angle Angle::average(const Angle &a1, double w1, const Angle &a2, double w2)
     }
     else
     {
-        return Angle((a1.angle * w1 + a2.angle * w2) / (w1 + w2) + M_PI);
+        if(a1.angle > a2.angle)
+            return Angle((a1.angle * w1 + (a2.angle+M_PI*2) * w2) / (w1 + w2));
+        else
+            return Angle(((a1.angle+M_PI*2) * w1 + a2.angle * w2) / (w1 + w2));
     }
 }
 

@@ -25,6 +25,7 @@ struct process_polygon
 {
     Polygon bounding;
     std::vector<std::vector<process_segment>> segments;
+    double shortest;
 
     void init_segments();
     bool process(double x, double y, double scale, process_point &result);

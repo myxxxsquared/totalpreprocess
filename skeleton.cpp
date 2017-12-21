@@ -13,10 +13,11 @@ typedef typename Ss::Vertex_const_handle Vertex_const_handle;
 typedef typename Ss::Halfedge_const_handle Halfedge_const_handle;
 typedef typename Ss::Halfedge_const_iterator Halfedge_const_iterator;
 
-#define MIN_COS_VALUE 0.707
+#define MIN_COS_VALUE 0.5
 
 class Point2ds
 {
+  public:
     vector<vector<Point2d>> points;
     vector<Point2d> centers;
 
@@ -59,7 +60,7 @@ class Point2ds
         if (index != -1)
         {
             this->points[index].push_back(p);
-            this->update_point_center(index);
+            //this->update_point_center(index);
         }
         else
         {
@@ -171,6 +172,9 @@ class SkeletonProcessor
             ps.add_point(Point2d(p1.x(), p1.y()));
             ps.add_point(Point2d(p2.x(), p2.y()));
         }
+
+        for(int i = 0; i < ps.size(); ++i)
+            ps.update_point_center(i);
 
         graph.init(ps.size());
         for (Halfedge_const_iterator i = ss.halfedges_begin(); i != ss.halfedges_end(); ++i)
