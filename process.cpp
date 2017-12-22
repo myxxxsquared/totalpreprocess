@@ -19,14 +19,14 @@ void Preprocess::process(int height, int width, const char *filename)
 
     polygons.clear();
     std::ifstream ifs{filename, std::ifstream::in};
-    std::list<Polygon> ps = loadfile(ifs);
+    std::vector<Polygon> ps = loadfile(ifs);
     polygons.reserve(ps.size());
     for (const Polygon &p : ps)
     {
         polygons.emplace_back();
         process_polygon &polygon = polygons.back();
         polygon.bounding = p;
-        polygon.init_segments();
+        polygon.init_segments(height, width);
     }
 
     for (int i = 0; i < NUMSCALES; i++)

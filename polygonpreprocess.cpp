@@ -3,8 +3,10 @@
 #include "polygonpreprocess.hpp"
 #include "skeleton.hpp"
 
-void process_polygon::init_segments()
+void process_polygon::init_segments(int height, int width)
 {
+    this->image_height = height;
+    this->image_width = width;
     this->segments.clear();
 
     this->shortest = INFINITY;
@@ -87,7 +89,18 @@ bool process_polygon::nearest_point(const Ray &r, double &result) const
         {
             if (auto *pt = boost::get<Point>(&*inter))
             {
-                double newdist = CGAL::squared_distance(r.source(), *pt);
+                double newx = pt->x();
+                double newy = pt->y();
+
+                if(newx < 0)
+                    newx = 0;
+                if(newx > this->image_width)
+                    newx = this->image_width;
+                if(newy < 0)
+                    newy = 0;
+                if(newy > this->image_height)
+                    newy = this->image_height;
+                double newdist = CGAL::squared_distance(r.source(), Point(newx, newy));
                 if (newdist < minval)
                 {
                     minval = newdist;

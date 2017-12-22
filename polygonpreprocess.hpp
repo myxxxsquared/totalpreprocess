@@ -27,7 +27,7 @@ struct process_polygon
     std::vector<std::vector<process_segment>> segments;
     double shortest;
 
-    void init_segments();
+    void init_segments(int height, int width);
     bool process(double x, double y, double scale, process_point &result);
 
   private:
@@ -35,6 +35,7 @@ struct process_polygon
     const process_segment *find_nearest(const Point& point) const;
     bool nearest_point(const Ray &r, double &result) const;
     Angle get_angle(const Point& point, const process_segment *minseg) const;
+    int image_width, image_height;
 };
 
 #endif

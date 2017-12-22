@@ -4,6 +4,7 @@
 
 #include "totalpreprocess.hpp"
 
-std::list<Polygon> loadfile(std::istream &ifs);
+std::vector<Polygon> loadfile(std::istream &ifs);
+void writefile(std::ostream& ofs, const std::vector<Polygon>& polygons);
 
 #endif

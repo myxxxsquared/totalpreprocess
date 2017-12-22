@@ -32,8 +32,10 @@ add_executable ( totalpreprocess
     angle.cpp
     data.cpp
     main.cpp
+    resize.cpp
     main_generator.cpp
     main_viewer.cpp
+    main_resize.cpp
     polygonpreprocess.cpp
     process.cpp
     skeleton.cpp

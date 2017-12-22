@@ -4,6 +4,7 @@
 
 int main_generator(int argc, char* argv[]);
 int main_viewer(int argc, char* argv[]);
+int main_resize(int argc, char* argv[]);
 
 int main(int argc, char* argv[])
 {
@@ -14,12 +15,14 @@ int main(int argc, char* argv[])
             inner_main = main_generator;
         else if(strcmp(argv[1], "viewer") == 0)
             inner_main = main_viewer;
+        else if(strcmp(argv[1], "resize") == 0)
+            inner_main = main_resize;
     }
 
     try
     {
         if(!inner_main)
-            throw "useage: totalpreprocess generator|viewer ...";
+            throw "useage: totalpreprocess generator|viewer|resize ...";
         return inner_main(argc, argv);
     }
     catch(const char* errstr)

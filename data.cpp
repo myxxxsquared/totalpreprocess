@@ -5,13 +5,13 @@
 using cv::Point2d;
 using std::istream;
 using std::string;
-using std::list;
+using std::vector;
 
-list<Polygon> loadfile(istream &ifs)
+vector<Polygon> loadfile(istream &ifs)
 {
     string line;
 
-    list<Polygon> result;
+    vector<Polygon> result;
     Polygon current;
 
     while (ifs.good())
@@ -30,11 +30,22 @@ list<Polygon> loadfile(istream &ifs)
         }
         if (line[0] == 'p')
         {
-            int x, y;
-            sscanf(line.c_str(), "p %d, %d", &x, &y);
+            double x, y;
+            sscanf(line.c_str(), "p %lf, %lf", &x, &y);
             current.push_back(Point(x, y));
         }
     }
 
     return result;
+}
+
+void writefile(std::ostream& ofs, const std::vector<Polygon>& polygons)
+{
+    for(auto& polygon: polygons)
+    {
+        ofs << "n\n";
+        for(auto it = polygon.vertices_begin(); it != polygon.vertices_end(); ++it)
+            ofs << "p " << it->x() << ", " << it->y() << "\n";
+        ofs << "e\n";
+    }
 }
