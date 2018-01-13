@@ -11,6 +11,9 @@
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Polygon_with_holes_2.h>
 #include <CGAL/Boolean_set_operations_2.h>
+#include <CGAL/General_polygon_set_2.h>
+#include <CGAL/Polygon_set_2.h>
+#include <CGAL/Simple_cartesian.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -23,7 +26,7 @@
 #include <istream>
 #include <string>
 
-typedef CGAL::Cartesian<double> CGALK;
+typedef CGAL::Simple_cartesian<double> CGALK;
 typedef CGAL::Exact_predicates_inexact_constructions_kernel CGALK_SS;
 typedef CGALK::Point_2 Point;
 typedef CGALK_SS::Point_2 PointSs;
@@ -34,3 +37,4 @@ typedef CGAL::Straight_skeleton_2<CGALK_SS> Ss;
 typedef boost::shared_ptr<Ss> SsPtr;
 typedef CGAL::Ray_2<CGALK> Ray;
 typedef CGAL::Polygon_with_holes_2<CGALK> Polygon_with_holes;
+typedef CGAL::Polygon_set_2<CGALK> Polygon_set;

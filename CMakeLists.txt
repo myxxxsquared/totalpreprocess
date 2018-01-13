@@ -36,9 +36,12 @@ add_executable ( totalpreprocess
     main_generator.cpp
     main_viewer.cpp
     main_resize.cpp
+    main_union.cpp
+    main_iou.cpp
     polygonpreprocess.cpp
     process.cpp
     skeleton.cpp
+    union.cpp
     cnpy/cnpy.cpp )
 
 target_link_libraries ( totalpreprocess
